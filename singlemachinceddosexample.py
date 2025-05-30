@@ -3,12 +3,10 @@ import requests
 url="http://192.168.1.1"
 while True :
  def uptask():
-    for i in range (10000):
      response1=requests.post(url)
      print(response1.status_code)
     
- def downtask(): 
-    for i in range (10000):
+ def downtask():
      response2=requests.post(url)
      print(response2.status_code)
     
