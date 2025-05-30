@@ -1,7 +1,7 @@
 import smtplib
 sender="scarofcupid@gmail.com"
-receiver="sharmadevi2077@gmail.com"
-password=""
+receiver="receiver@gmail.com"
+password="useyourownappgeneratedpassword"
 message="Hello,This is an example of test mail!! "
 try :
  with smtplib.SMTP('smtp.gmail.com',587) as server :
