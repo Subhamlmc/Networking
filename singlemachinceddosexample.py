@@ -3,10 +3,12 @@ import requests
 url="http://192.168.1.1"
 while True :
  def uptask():
+  for i in range (100) # you can increase the value to see the difference !
      response1=requests.post(url)
      print(response1.status_code)
     
  def downtask():
+  for j in range (100):
      response2=requests.post(url)
      print(response2.status_code)
     
