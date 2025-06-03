@@ -1,3 +1,5 @@
+#! /usr/bin/python3
+#This is an example of uses of socket library along with threading !!
 import socket
 import threading
 client_socket=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
