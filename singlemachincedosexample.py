@@ -3,7 +3,7 @@ import requests
 url="http://192.168.1.1"
 while True :
  def uptask():
-  for i in range (100) # you can increase the value to see the difference !
+  for i in range (100) #Every website under the sun has protection for this  type of bullshits !!
      response1=requests.post(url)
      print(response1.status_code)
     
