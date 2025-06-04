@@ -4,7 +4,7 @@ def filter(packet):
     if packet.haslayer(Dot11Beacon):
         ssid=packet[Dot11Elt].info.decode(error='ignore')
         bssid=packet[Dot11Beacon].addr3
-    print(f"SSID:{ssid},BSSID:{bssid}")
+        print(f"SSID:{ssid},BSSID:{bssid}")
 
 
 
