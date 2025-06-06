@@ -1,0 +1,76 @@
+#!/usr/bin/python3
+import subprocess
+import time 
+import os
+
+print('This script will drop IPv4 packets from websites. Blocked websites are saved in "blocked.txt".')
+time.sleep(3)
+print("Cases:")
+print("1) Append website to block list")
+print("2) Remove website from block list")
+print("-----wait-----")
+
+try:
+    asking= int(input("Enter the case (e.g., 1): "))
+    if asking == 1:
+        ask = input("Enter the website domain to block (eg:www.pornhub.com): ")
+        result = subprocess.run(["dig", "+short", "A", ask], capture_output=True, text=True)
+        ips = result.stdout.strip().splitlines()
+
+        if not ips:
+            print("Could not resolve domain.")
+            exit(1)
+
+        for ip in ips:
+#looping through multipal addresses like website put multiples adresses so that other can be in use when one is not working
+            subprocess.run(["sudo", "iptables", "-A", "OUTPUT", "-p", "tcp", "-d", ip, "-j", "REJECT"])
+            print(f"Blocked {ask} at {ip}")
+#saving the thing in file like we can see which are blocked 
+            with open('blocked.txt', 'a') as f:
+                f.write(f"{ask} - {ip} has been blocked\n")
+
+        # saving rules
+        os.makedirs("/etc/iptables", exist_ok=True)
+        try:
+            with open("/etc/iptables/rules.v4", "w") as f:
+                subprocess.run(["sudo", "iptables-save"], stdout=f)
+            print("iptables rules saved to /etc/iptables/rules.v4")
+        except PermissionError:
+            print("Permission denied: run this script with sudo to save iptables rules.")
+
+    elif asking == 2:
+        ask = input("Enter the domain to unblock: ")
+        result = subprocess.run(["dig", "+short", "A", ask], capture_output=True, text=True)
+        ips = result.stdout.strip().splitlines()
+
+        if not ips:
+            print("Could not resolve domain.")
+            exit(1)
+
+        for ip in ips:
+#looping through multipal addresses like website put multiples adresses so that other can be in use when one is not working
+            subprocess.run(["sudo", "iptables", "-D", "OUTPUT", "-p", "tcp", "-d", ip, "-j", "REJECT"])
+            print(f"Unblocked {ask} at {ip}")
+
+#saving the thing in file like we can see which are blocked 
+        with open('blocked.txt', 'r') as f:
+            lines = f.readlines()
+        with open('blocked.txt', 'w') as f:
+            for line in lines:
+                if ask not in line:
+                    f.write(line)
+
+        # saving rules
+        os.makedirs("/etc/iptables", exist_ok=True)
+        try:
+            with open("/etc/iptables/rules.v4", "w") as f:
+                subprocess.run(["sudo", "iptables-save"], stdout=f)
+            print("iptables rules saved to /etc/iptables/rules.v4")
+        except PermissionError:
+            print("Run with sudo !!")
+
+    else:
+        print("Invalid option.")
+
+except ValueError:
+    print("Please enter a valid number.")
